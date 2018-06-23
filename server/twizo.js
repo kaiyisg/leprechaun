@@ -73,7 +73,33 @@ const pollBioVoiceRegistration = (next, twizo, number) => {
 }
 
 const pollBioVoiceVerification = (next, twizo, messageId) => {
-  return pollFunc(next, () => checkBioVoiceVerification(twizo, messageId))
+  return new Promise((resolve, reject) => {
+    let attempts = 0
+    const timer = setInterval(async () => {
+      try {
+        if (attempts > 20) {
+          clearInterval(timer)
+          return reject('More than 20 attempts')
+        }
+        const response = await twizo.get(`/verification/submit/${messageId}`)
+        const code = response.data.statusCode
+        switch (code) {
+          case 1:
+            clearInterval(timer)
+            return resolve(true)
+          case 4:
+            clearInterval(timer)
+            return resolve(false)
+          default:
+            attempts++
+        }
+      } catch (error) {
+        next(error)
+        clearInterval(timer)
+        return reject(error)
+      }
+    }, 3000)
+  })
 }
 
 module.exports = {
