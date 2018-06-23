@@ -6,7 +6,11 @@ const columns = [
   {
     title: 'Employee',
     dataIndex: 'name',
-    render: (text) => <a href="javascript:;">{text}</a>,
+    render: (text) => (
+      <a href="javascript:;" style={{ color: '#49C0BE' }}>
+        {text}
+      </a>
+    ),
   },
   {
     title: 'Start Time',
@@ -31,18 +35,16 @@ const columns = [
 ]
 
 // rowSelection object indicates the need for row selection
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      'selectedRows: ',
-      selectedRows,
-    )
-  },
-}
+// const rowSelection = {
+//   onChange: (selectedRowKeys, selectedRows) => {
+//     console.log(
+//       `selectedRowKeys: ${selectedRowKeys}`,
+//       'selectedRows: ',
+//       selectedRows,
+//     )
+//   },
+// }
 
-const ClockinTable = ({ data }) => (
-  <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
-)
+const ClockinTable = ({ data }) => <Table columns={columns} dataSource={data} />
 
 export default ClockinTable
