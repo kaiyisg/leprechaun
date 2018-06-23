@@ -9,23 +9,23 @@ const testTwizo = axios.create({
   auth: { username: 'twizo', password: TEST_KEY },
 })
 
- const realTwizo = axios.create({
+const realTwizo = axios.create({
   baseURL: URL,
   auth: { username: 'twizo', password: REAL_KEY },
 })
 
- const registerBioVoice = (twizo, number) => {
+const registerBioVoice = (twizo, number) => {
   return twizo.post(`/biovoice/registration`, { recipient: number })
 }
 
- const checkBioVoiceRegistration = (twizo, number) => {
-  return twizo.get(`/biovoice/registration${number}`).then((response) => {
+const checkBioVoiceRegistration = (twizo, number) => {
+  return twizo.get(`/biovoice/registration/${number}`).then((response) => {
     console.log(response.data)
     return response.data.statusCode === 1
   })
 }
 
- const verifyByBioVoice = (twizo, number) => {
+const verifyByBioVoice = (twizo, number) => {
   return twizo
     .post('/verification/submit', {
       recipient: number,
@@ -37,38 +37,43 @@ const testTwizo = axios.create({
     })
 }
 
- const checkBioVoiceVerification = (twizo, messageId) => {
+const checkBioVoiceVerification = (twizo, messageId) => {
   return twizo.get(`/verification/submit/${messageId}`).then((response) => {
     console.log(response.data)
     return response.data.statusCode === 1
   })
 }
 
-
-const pollFunc = (func) => {
+const pollFunc = (next, func) => {
   return new Promise((resolve, reject) => {
     let attempts = 0
-    const timer = setInterval(() => {
-      if (attempts > 20) {
+    const timer = setInterval(async () => {
+      try {
+        if (attempts > 20) {
+          clearInterval(timer)
+          return reject('More than 20 attempts')
+        }
+        const ok = await func()
+        if (ok) {
+          clearInterval(timer)
+          return resolve(ok)
+        }
+        attempts++
+      } catch (error) {
+        next(error)
         clearInterval(timer)
-        return reject('More than 20 attempts')
+        return reject(error)
       }
-      const ok = await func()
-      if (ok) {
-        clearInterval(timer)
-        return resolve(ok)
-      }
-      attempts++
-    }, 3000);
+    }, 3000)
   })
 }
 
- const pollBioVoiceRegistration = (twizo, number) => {
-  return pollFunc(() => twizo.checkBioVoiceRegistration(twizo, number))
+const pollBioVoiceRegistration = (next, twizo, number) => {
+  return pollFunc(next, () => checkBioVoiceRegistration(twizo, number))
 }
 
- const pollBioVoiceVerification = (twizo, messageId) => {
-  return pollFunc(() => twizo.checkBioVoiceVerification(twizo, messageId))
+const pollBioVoiceVerification = (next, twizo, messageId) => {
+  return pollFunc(next, () => checkBioVoiceVerification(twizo, messageId))
 }
 
 module.exports = {
@@ -77,5 +82,5 @@ module.exports = {
   registerBioVoice,
   verifyByBioVoice,
   pollBioVoiceRegistration,
-  pollBioVoiceVerification
+  pollBioVoiceVerification,
 }

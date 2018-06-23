@@ -8,13 +8,15 @@ const port = process.env.PORT || 5000
 const twizo = require('./twizo')
 
 const NUMBER = '6596700794'
-const twizoInstance = twizo.testTwizo
+// const NUMBER = '6596701794'
+// const twizoInstance = twizo.testTwizo
+const twizoInstance = twizo.realTwizo
 
 // API calls
-app.get('/api/register', (req, res, next) => {
+app.get('/api/register', async (req, res, next) => {
   try {
     await twizo.registerBioVoice(twizoInstance, NUMBER)
-    await twizo.pollBioVoiceRegistration(twizoInstance, NUMBER)
+    await twizo.pollBioVoiceRegistration(next, twizoInstance, NUMBER)
   } catch (err) {
     console.error(err)
     console.log(err)
@@ -23,17 +25,41 @@ app.get('/api/register', (req, res, next) => {
   return res.send('registered')
 })
 
-app.get('/api/verify', (req, res, next) => {
+app.get('/api/register/check', async (req, res, next) => {
   try {
-    const messageId = await twizo.verifyByBioVoice(twizoInstance, NUMBER)
-    await twizo.pollBioVoiceVerification(twizoInstance, messageId)
+    await twizo.pollBioVoiceRegistration(next, twizoInstance, NUMBER)
   } catch (err) {
     console.error(err)
     console.log(err)
     return next(err)
   }
-  return res.send('verified!')
+  return res.send('registered')
 })
+
+app.get('/api/verify', async (req, res, next) => {
+  try {
+    const messageId = await twizo.verifyByBioVoice(twizoInstance, NUMBER)
+    console.log(messageId)
+    await twizo.pollBioVoiceVerification(next, twizoInstance, messageId)
+  } catch (err) {
+    console.error(err)
+    console.log(err)
+    return next(err)
+  }
+  return res.send('verified!', messageId)
+})
+
+// app.get('/api/verify/check', async (req, res, next) => {
+//   try {
+//     const messageId = await twizo.verifyByBioVoice(twizoInstance, NUMBER)
+//     await twizo.pollBioVoiceVerification(next, twizoInstance, messageId)
+//   } catch (err) {
+//     console.error(err)
+//     console.log(err)
+//     return next(err)
+//   }
+//   return res.send('verified!')
+// })
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
