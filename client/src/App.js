@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
 import moment from 'moment'
-import web3 from 'web3'
 
 import './App.css'
 import ClockinTable from './table'
@@ -18,7 +17,6 @@ class App extends Component {
   setupClockin = () => {
     subscribeClockin((err, clockinData) => {
       const { phoneNumber, startTime } = clockinData
-      const currState = _.find(this.state.payroll, { phoneNumber })
       const newPayroll = _.map(this.state.payroll, (item) => {
         if (item.phoneNumber === phoneNumber) {
           return { ...item, startTime }
@@ -88,6 +86,7 @@ class App extends Component {
                   marginTop: 10,
                   marginLeft: 10,
                 }}
+                alt={'miao'}
                 src={require('./img/leprecoin.png')}
               />
             </Header>
@@ -107,6 +106,7 @@ class App extends Component {
                   bottom: '-5px',
                   width: 200,
                 }}
+                alt={'miao'}
                 src={require('./img/lepre.png')}
               />
             </Content>
