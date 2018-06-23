@@ -65,7 +65,6 @@ app.get('/api/delete', async (req, res, next) => {
 })
 
 app.get('/api/payroll', async (req, res, next) => {
-  clockIn()
   return res.send(data)
 })
 
