@@ -28,19 +28,10 @@ const verifyByBioVoice = (twizo, number) => {
   return twizo
     .post('/verification/submit', {
       recipient: number,
-      type: 'sms',
-      // type: 'biovoice',
+      type: 'biovoice',
     })
     .then((response) => {
       return response.data.messageId
-    })
-}
-
-const checkBioVoiceVerification = (twizo, messageId) => {
-  return twizo
-    .get(`/verification/submit/${messageId}?token=012345`)
-    .then((response) => {
-      return response.data.statusCode === 1
     })
 }
 
@@ -83,9 +74,7 @@ const pollBioVoiceVerification = (next, twizo, messageId) => {
           clearInterval(timer)
           return reject('More than 20 attempts')
         }
-        const response = await twizo.get(
-          `/verification/submit/${messageId}?token=012345`,
-        )
+        const response = await twizo.get(`/verification/submit/${messageId}`)
         const code = response.data.statusCode
         console.log('code is: ', code)
         switch (code) {

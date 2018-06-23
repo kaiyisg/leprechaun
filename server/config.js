@@ -1,5 +1,4 @@
-const NUMBER = '6500000000'
-// const NUMBER = '6596700794'
+const NUMBER = process.env.NUMBER || '6596686612'
 
 module.exports = {
   NUMBER,
