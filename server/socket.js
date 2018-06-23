@@ -1,5 +1,5 @@
 const io = require("socket.io")();
-const { socketPort } = require("../config");
+const socketPort = 8000;
 
 const startSocket = () => {
   io.on("connection", client => {
