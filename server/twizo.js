@@ -20,7 +20,6 @@ const registerBioVoice = (twizo, number) => {
 
 const checkBioVoiceRegistration = (twizo, number) => {
   return twizo.get(`/biovoice/registration/${number}`).then((response) => {
-    console.log(response.data)
     return response.data.statusCode === 1
   })
 }
@@ -29,19 +28,20 @@ const verifyByBioVoice = (twizo, number) => {
   return twizo
     .post('/verification/submit', {
       recipient: number,
-      type: 'biovoice',
+      type: 'sms',
+      // type: 'biovoice',
     })
     .then((response) => {
-      console.log(response.data)
       return response.data.messageId
     })
 }
 
 const checkBioVoiceVerification = (twizo, messageId) => {
-  return twizo.get(`/verification/submit/${messageId}`).then((response) => {
-    console.log(response.data)
-    return response.data.statusCode === 1
-  })
+  return twizo
+    .get(`/verification/submit/${messageId}?token=012345`)
+    .then((response) => {
+      return response.data.statusCode === 1
+    })
 }
 
 const pollFunc = (next, func) => {
@@ -49,6 +49,7 @@ const pollFunc = (next, func) => {
     let attempts = 0
     const timer = setInterval(async () => {
       try {
+        console.log('current attempt: ', attempts)
         if (attempts > 20) {
           clearInterval(timer)
           return reject('More than 20 attempts')
@@ -77,12 +78,16 @@ const pollBioVoiceVerification = (next, twizo, messageId) => {
     let attempts = 0
     const timer = setInterval(async () => {
       try {
+        console.log('current attempt: ', attempts)
         if (attempts > 20) {
           clearInterval(timer)
           return reject('More than 20 attempts')
         }
-        const response = await twizo.get(`/verification/submit/${messageId}`)
+        const response = await twizo.get(
+          `/verification/submit/${messageId}?token=012345`,
+        )
         const code = response.data.statusCode
+        console.log('code is: ', code)
         switch (code) {
           case 1:
             clearInterval(timer)

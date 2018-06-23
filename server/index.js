@@ -7,10 +7,10 @@ const port = process.env.PORT || 5000
 
 const twizo = require('./twizo')
 
-const NUMBER = '6596700794'
-// const NUMBER = '6596701794'
-// const twizoInstance = twizo.testTwizo
-const twizoInstance = twizo.realTwizo
+const NUMBER = '6500000000'
+// const NUMBER = '6596700794'
+const twizoInstance = twizo.testTwizo
+// const twizoInstance = twizo.realTwizo
 
 // API calls
 app.get('/api/register', async (req, res, next) => {
@@ -27,39 +27,39 @@ app.get('/api/register', async (req, res, next) => {
 
 app.get('/api/register/check', async (req, res, next) => {
   try {
-    await twizo.pollBioVoiceRegistration(next, twizoInstance, NUMBER)
+    const response = await twizoInstance.get(`/biovoice/subscription/${NUMBER}`)
+    console.log(response.data)
   } catch (err) {
-    console.error(err)
-    console.log(err)
     return next(err)
   }
-  return res.send('registered')
+  return res.send('ok!')
 })
 
 app.get('/api/verify', async (req, res, next) => {
+  let ok
   try {
     const messageId = await twizo.verifyByBioVoice(twizoInstance, NUMBER)
-    console.log(messageId)
-    await twizo.pollBioVoiceVerification(next, twizoInstance, messageId)
+    console.log('Now verifying...')
+    ok = await twizo.pollBioVoiceVerification(next, twizoInstance, messageId)
   } catch (err) {
-    console.error(err)
-    console.log(err)
-    return next(err)
+    console.log('FAILED', err)
+    res.status(500)
+    return res.send(err)
   }
-  return res.send('verified!', messageId)
+  if (ok) {
+    return res.send('verified!')
+  }
+  return res.send('failed!')
 })
 
-// app.get('/api/verify/check', async (req, res, next) => {
-//   try {
-//     const messageId = await twizo.verifyByBioVoice(twizoInstance, NUMBER)
-//     await twizo.pollBioVoiceVerification(next, twizoInstance, messageId)
-//   } catch (err) {
-//     console.error(err)
-//     console.log(err)
-//     return next(err)
-//   }
-//   return res.send('verified!')
-// })
+app.get('/api/delete', async (req, res, next) => {
+  try {
+    await twizoInstance.delete(`/biovoice/subscription/${NUMBER}`)
+  } catch (err) {
+    return next(err)
+  }
+  return res.send('deleted!')
+})
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
