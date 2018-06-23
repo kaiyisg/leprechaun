@@ -7,6 +7,7 @@ const data = [
     rate: '$13.50',
     cost: '',
     paid: '',
+    phoneNumber: '',
   },
   {
     key: '2',
@@ -16,6 +17,7 @@ const data = [
     rate: '$13.50',
     cost: '',
     paid: '',
+    phoneNumber: '',
   },
   {
     key: '3',
@@ -25,6 +27,7 @@ const data = [
     rate: '$13.50',
     cost: '',
     paid: '',
+    phoneNumber: '',
   },
   {
     key: '4',
@@ -34,6 +37,7 @@ const data = [
     rate: '$13.50',
     cost: '',
     paid: '',
+    phoneNumber: '',
   },
 ]
 
