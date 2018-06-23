@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
+import moment from 'moment'
 
 import './App.css'
 import ClockinTable from './table'
-import { subscribeToTimer } from './api/socket'
+import { subscribeClockin } from './api/socket'
 import { Layout } from 'antd'
 
 const { Header, Content, Footer } = Layout
@@ -10,16 +12,45 @@ const { Header, Content, Footer } = Layout
 class App extends Component {
   state = {
     payroll: [],
-    timestamp: 'no timestamp yet',
-    collapsed: false,
+  }
+
+  setupClockin = () => {
+    subscribeClockin((err, clockinData) => {
+      const { phoneNumber, startTime } = clockinData
+      const currState = _.find(this.state.payroll, { phoneNumber })
+      const newPayroll = _.map(this.state.payroll, (item) => {
+        if (item.phoneNumber === phoneNumber) {
+          return { ...item, startTime }
+        }
+        return item
+      })
+      this.setupClockout(phoneNumber)
+      this.setState({
+        payroll: newPayroll,
+      })
+    })
+  }
+
+  setupClockout = (phoneNumber) => {
+    const endTime = moment()
+      .add(4, 'h')
+      .format('ddd, MMM DD, h:mm:ss a')
+    const cost = '$54.00'
+    setTimeout(() => {
+      const newPayroll = _.map(this.state.payroll, (item) => {
+        if (item.phoneNumber === phoneNumber) {
+          return { ...item, endTime, cost }
+        }
+        return item
+      })
+      this.setState({
+        payroll: newPayroll,
+      })
+    }, 3000)
   }
 
   componentDidMount() {
-    subscribeToTimer((err, timestamp) =>
-      this.setState({
-        timestamp,
-      }),
-    )
+    this.setupClockin()
     this.callApi()
       .then((res) => {
         this.setState({ payroll: res })
@@ -28,9 +59,7 @@ class App extends Component {
   }
 
   callApi = async () => {
-    console.log('calling api')
     const response = await fetch('/api/payroll')
-    console.log('miao')
     const body = await response.json()
 
     if (response.status !== 200) throw Error(body.message)
@@ -46,7 +75,6 @@ class App extends Component {
             <Header
               style={{
                 background: '#fff',
-                padding: 0,
                 display: 'flex',
                 padding: '24px',
               }}
@@ -61,10 +89,6 @@ class App extends Component {
                 minHeight: 280,
               }}
             >
-              <p className="App-intro">{this.state.response}</p>
-              <p className="App-socket">
-                This is the timer value: {this.state.timestamp}
-              </p>
               <ClockinTable data={this.state.payroll} />
             </Content>
             <Footer style={{ textAlign: 'center' }}>

@@ -7,7 +7,7 @@ const data = [
     rate: '$13.50',
     cost: '',
     paid: '',
-    phoneNumber: '',
+    phoneNumber: '6500000000',
   },
   {
     key: '2',

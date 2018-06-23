@@ -1,10 +1,9 @@
-import openSocket from "socket.io-client";
+import openSocket from 'socket.io-client'
 
-const socket = openSocket(`http://localhost:8000`);
+const socket = openSocket(`http://localhost:8000`)
 
-function subscribeToTimer(cb) {
-  socket.on("timer", timestamp => cb(null, timestamp));
-  socket.emit("subscribeToTimer", 1000);
+function subscribeClockin(cb) {
+  socket.on('clockin', (data) => cb(null, data))
 }
 
-export { subscribeToTimer };
+export { subscribeClockin }

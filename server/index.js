@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
-const { startSocket } = require('./socket')
+const { startSocket, io } = require('./socket')
+const moment = require('moment')
 const { data } = require('./data')
 
 const app = express()
@@ -48,6 +49,10 @@ app.get('/api/verify', async (req, res, next) => {
     return res.send(err)
   }
   if (ok) {
+    io.emit('clockin', {
+      phoneNumber: NUMBER,
+      startTime: moment().format('ddd, MMM DD, h:mm:ss a'),
+    })
     return res.send('verified!')
   }
   return res.send('failed!')
@@ -64,6 +69,10 @@ app.get('/api/delete', async (req, res, next) => {
 
 app.get('/api/payroll', async (req, res, next) => {
   console.log('returning the payroll')
+  io.emit('clockin', {
+    phoneNumber: NUMBER,
+    startTime: moment().format('ddd, MMM DD, h:mm:ss a'),
+  })
   return res.send(data)
 })
 
@@ -80,3 +89,7 @@ if (process.env.NODE_ENV === 'production') {
 app.listen(port, () => console.log(`Listening on port ${port}`))
 
 startSocket()
+
+module.exports = {
+  NUMBER,
+}
