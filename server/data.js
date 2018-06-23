@@ -1,3 +1,5 @@
+const { NUMBER } = require('./config')
+
 const data = [
   {
     key: '1',
@@ -7,7 +9,7 @@ const data = [
     rate: '$13.50',
     cost: '',
     paid: '',
-    phoneNumber: '6500000000',
+    phoneNumber: NUMBER,
   },
   {
     key: '2',

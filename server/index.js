@@ -3,14 +3,12 @@ const path = require('path')
 const { startSocket, io } = require('./socket')
 const moment = require('moment')
 const { data } = require('./data')
+const { NUMBER } = require('./config')
 
 const app = express()
 const port = process.env.PORT || 5000
 
 const twizo = require('./twizo')
-
-const NUMBER = '6500000000'
-// const NUMBER = '6596700794'
 const twizoInstance = twizo.testTwizo
 // const twizoInstance = twizo.realTwizo
 
@@ -49,10 +47,7 @@ app.get('/api/verify', async (req, res, next) => {
     return res.send(err)
   }
   if (ok) {
-    io.emit('clockin', {
-      phoneNumber: NUMBER,
-      startTime: moment().format('ddd, MMM DD, h:mm:ss a'),
-    })
+    clockIn()
     return res.send('verified!')
   }
   return res.send('failed!')
@@ -68,13 +63,16 @@ app.get('/api/delete', async (req, res, next) => {
 })
 
 app.get('/api/payroll', async (req, res, next) => {
-  console.log('returning the payroll')
+  clockIn()
+  return res.send(data)
+})
+
+const clockIn = () => {
   io.emit('clockin', {
     phoneNumber: NUMBER,
     startTime: moment().format('ddd, MMM DD, h:mm:ss a'),
   })
-  return res.send(data)
-})
+}
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
@@ -89,7 +87,3 @@ if (process.env.NODE_ENV === 'production') {
 app.listen(port, () => console.log(`Listening on port ${port}`))
 
 startSocket()
-
-module.exports = {
-  NUMBER,
-}

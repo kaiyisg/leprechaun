@@ -21,7 +21,7 @@ const columns = [
     dataIndex: 'rate',
   },
   {
-    title: 'Cost',
+    title: 'Payout',
     dataIndex: 'cost',
   },
   {
