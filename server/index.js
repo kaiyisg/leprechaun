@@ -67,6 +67,10 @@ app.get('/api/payroll', async (req, res, next) => {
   return res.send(data)
 })
 
+app.get('/api/verion', async (req, res) => {
+  return res.send('v1.0')
+})
+
 const clockIn = () => {
   io.emit('clockin', {
     phoneNumber: NUMBER,
