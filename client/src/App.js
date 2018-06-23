@@ -2,14 +2,15 @@ import React, { Component } from "react";
 
 import "./App.css";
 import { subscribeToTimer } from "./api/socket";
-import { Layout, Menu, Breadcrumb } from "antd";
+import { Layout, Menu, Breadcrumb, Icon } from "antd";
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content, Footer, Sider } = Layout;
 
 class App extends Component {
   state = {
     response: "",
-    timestamp: "no timestamp yet"
+    timestamp: "no timestamp yet",
+    collapsed: false
   };
 
   componentDidMount() {
@@ -23,6 +24,12 @@ class App extends Component {
       .catch(err => console.log(err));
   }
 
+  toggle = () => {
+    this.setState({
+      collapsed: !this.state.collapsed
+    });
+  };
+
   callApi = async () => {
     const response = await fetch("/api/hello");
     const body = await response.json();
@@ -35,36 +42,49 @@ class App extends Component {
   render() {
     return (
       <div className="App" style={{ height: "100%" }}>
-        <Layout className="layout" style={{ height: "100%" }}>
-          <Header>
+        <Layout style={{ height: "100%" }}>
+          <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
             <div className="logo" />
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              defaultSelectedKeys={["2"]}
-              style={{ lineHeight: "64px" }}
-            >
-              <Menu.Item key="1">nav 1</Menu.Item>
-              <Menu.Item key="2">nav 2</Menu.Item>
-              <Menu.Item key="3">nav 3</Menu.Item>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+              <Menu.Item key="1">
+                <Icon type="user" />
+                <span>nav 1</span>
+              </Menu.Item>
+              <Menu.Item key="2">
+                <Icon type="video-camera" />
+                <span>nav 2</span>
+              </Menu.Item>
+              <Menu.Item key="3">
+                <Icon type="upload" />
+                <span>nav 3</span>
+              </Menu.Item>
             </Menu>
-          </Header>
-          <Content style={{ padding: "0 50px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>Home</Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-              <Breadcrumb.Item>App</Breadcrumb.Item>
-            </Breadcrumb>
-            <div style={{ background: "#fff", padding: 24, minHeight: 280 }}>
+          </Sider>
+          <Layout>
+            <Header style={{ background: "#fff", padding: 0 }}>
+              <Icon
+                className="trigger"
+                type={this.state.collapsed ? "menu-unfold" : "menu-fold"}
+                onClick={this.toggle}
+              />
+            </Header>
+            <Content
+              style={{
+                margin: "24px 16px",
+                padding: 24,
+                background: "#fff",
+                minHeight: 280
+              }}
+            >
               <p className="App-intro">{this.state.response}</p>
               <p className="App-socket">
                 This is the timer value: {this.state.timestamp}
               </p>
-            </div>
-          </Content>
-          <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2016 Created by Ant UED
-          </Footer>
+            </Content>
+            <Footer style={{ textAlign: "center" }}>
+              Leprechaun ©2018 Created by Leprechaun Pte. Ltd.
+            </Footer>
+          </Layout>
         </Layout>
       </div>
     );
