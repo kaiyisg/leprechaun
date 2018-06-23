@@ -2,9 +2,10 @@ const io = require("socket.io")();
 
 const startSocket = () => {
   const socketPort = 8000;
-
   io.on("connection", client => {
-    // here you can start emitting events to the client
+    client.on("subscribeToTimer", interval => {
+      console.log("client is subscribing to timer with interval ", interval);
+    });
   });
 
   io.listen(socketPort);
