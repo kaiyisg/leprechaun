@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import './App.css'
+import ClockinTable from './table'
 import { subscribeToTimer } from './api/socket'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd'
 
@@ -24,12 +25,6 @@ class App extends Component {
     //   .catch(err => console.log(err));
   }
 
-  toggle = () => {
-    this.setState({
-      collapsed: !this.state.collapsed,
-    })
-  }
-
   callApi = async () => {
     const response = await fetch('/api/hello')
     const body = await response.json()
@@ -43,30 +38,16 @@ class App extends Component {
     return (
       <div className="App" style={{ height: '100%' }}>
         <Layout style={{ height: '100%' }}>
-          <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-            <div className="logo" />
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-              <Menu.Item key="1">
-                <Icon type="user" />
-                <span>nav 1</span>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Icon type="video-camera" />
-                <span>nav 2</span>
-              </Menu.Item>
-              <Menu.Item key="3">
-                <Icon type="upload" />
-                <span>nav 3</span>
-              </Menu.Item>
-            </Menu>
-          </Sider>
           <Layout>
-            <Header style={{ background: '#fff', padding: 0 }}>
-              <Icon
-                className="trigger"
-                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                onClick={this.toggle}
-              />
+            <Header
+              style={{
+                background: '#fff',
+                padding: 0,
+                display: 'flex',
+                padding: '24px',
+              }}
+            >
+              <span style={{ 'font-size': '24px' }}>Payroll</span>
             </Header>
             <Content
               style={{
@@ -80,6 +61,7 @@ class App extends Component {
               <p className="App-socket">
                 This is the timer value: {this.state.timestamp}
               </p>
+              <ClockinTable />
             </Content>
             <Footer style={{ textAlign: 'center' }}>
               Leprechaun ©2018 Created by Leprechaun Pte. Ltd.
