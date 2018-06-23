@@ -4,28 +4,28 @@ const TEST_KEY = '5RX7BZX9R287D3d-hKCdg7t4rYxZJLqk7YvRTX4Skrb1zKQ_'
 const REAL_KEY = 't2egHLRt2GjYT35T5mKaTAIYy7GzVvGYKjw5Mob31OSa6k7y'
 const URL = 'https://api-asia-01.twizo.com'
 
-export const testTwizo = axios.create({
+const testTwizo = axios.create({
   baseURL: URL,
   auth: { username: 'twizo', password: TEST_KEY },
 })
 
-export const realTwizo = axios.create({
+ const realTwizo = axios.create({
   baseURL: URL,
   auth: { username: 'twizo', password: REAL_KEY },
 })
 
-export const registerBioVoice = (twizo, number) => {
+ const registerBioVoice = (twizo, number) => {
   return twizo.post(`/biovoice/registration`, { recipient: number })
 }
 
-export const checkBioVoiceRegistration = (twizo, number) => {
+ const checkBioVoiceRegistration = (twizo, number) => {
   return twizo.get(`/biovoice/registration${number}`).then((response) => {
     console.log(response.data)
     return response.data.statusCode === 1
   })
 }
 
-export const verifyByBioVoice = (twizo, number) => {
+ const verifyByBioVoice = (twizo, number) => {
   return twizo
     .post('/verification/submit', {
       recipient: number,
@@ -37,9 +37,45 @@ export const verifyByBioVoice = (twizo, number) => {
     })
 }
 
-export const checkBioVoiceVerification = (twizo, messageId) => {
+ const checkBioVoiceVerification = (twizo, messageId) => {
   return twizo.get(`/verification/submit/${messageId}`).then((response) => {
     console.log(response.data)
     return response.data.statusCode === 1
   })
+}
+
+
+const pollFunc = (func) => {
+  return new Promise((resolve, reject) => {
+    let attempts = 0
+    const timer = setInterval(() => {
+      if (attempts > 20) {
+        clearInterval(timer)
+        return reject('More than 20 attempts')
+      }
+      const ok = await func()
+      if (ok) {
+        clearInterval(timer)
+        return resolve(ok)
+      }
+      attempts++
+    }, 3000);
+  })
+}
+
+ const pollBioVoiceRegistration = (twizo, number) => {
+  return pollFunc(() => twizo.checkBioVoiceRegistration(twizo, number))
+}
+
+ const pollBioVoiceVerification = (twizo, messageId) => {
+  return pollFunc(() => twizo.checkBioVoiceVerification(twizo, messageId))
+}
+
+module.exports = {
+  testTwizo,
+  realTwizo,
+  registerBioVoice,
+  verifyByBioVoice,
+  pollBioVoiceRegistration,
+  pollBioVoiceVerification
 }
