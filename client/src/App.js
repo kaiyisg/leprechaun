@@ -1,51 +1,51 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
-import "./App.css";
-import { subscribeToTimer } from "./api/socket";
-import { Layout, Menu, Breadcrumb, Icon } from "antd";
+import './App.css'
+import { subscribeToTimer } from './api/socket'
+import { Layout, Menu, Breadcrumb, Icon } from 'antd'
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer, Sider } = Layout
 
 class App extends Component {
   state = {
-    response: "",
-    timestamp: "no timestamp yet",
-    collapsed: false
-  };
+    response: '',
+    timestamp: 'no timestamp yet',
+    collapsed: false,
+  }
 
   componentDidMount() {
     subscribeToTimer((err, timestamp) =>
       this.setState({
-        timestamp
-      })
-    );
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
+        timestamp,
+      }),
+    )
+    // this.callApi()
+    //   .then(res => this.setState({ response: res.express }))
+    //   .catch(err => console.log(err));
   }
 
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed
-    });
-  };
+      collapsed: !this.state.collapsed,
+    })
+  }
 
   callApi = async () => {
-    const response = await fetch("/api/hello");
-    const body = await response.json();
+    const response = await fetch('/api/hello')
+    const body = await response.json()
 
-    if (response.status !== 200) throw Error(body.message);
+    if (response.status !== 200) throw Error(body.message)
 
-    return body;
-  };
+    return body
+  }
 
   render() {
     return (
-      <div className="App" style={{ height: "100%" }}>
-        <Layout style={{ height: "100%" }}>
+      <div className="App" style={{ height: '100%' }}>
+        <Layout style={{ height: '100%' }}>
           <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
             <div className="logo" />
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
               <Menu.Item key="1">
                 <Icon type="user" />
                 <span>nav 1</span>
@@ -61,19 +61,19 @@ class App extends Component {
             </Menu>
           </Sider>
           <Layout>
-            <Header style={{ background: "#fff", padding: 0 }}>
+            <Header style={{ background: '#fff', padding: 0 }}>
               <Icon
                 className="trigger"
-                type={this.state.collapsed ? "menu-unfold" : "menu-fold"}
+                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                 onClick={this.toggle}
               />
             </Header>
             <Content
               style={{
-                margin: "24px 16px",
+                margin: '24px 16px',
                 padding: 24,
-                background: "#fff",
-                minHeight: 280
+                background: '#fff',
+                minHeight: 280,
               }}
             >
               <p className="App-intro">{this.state.response}</p>
@@ -81,14 +81,14 @@ class App extends Component {
                 This is the timer value: {this.state.timestamp}
               </p>
             </Content>
-            <Footer style={{ textAlign: "center" }}>
+            <Footer style={{ textAlign: 'center' }}>
               Leprechaun ©2018 Created by Leprechaun Pte. Ltd.
             </Footer>
           </Layout>
         </Layout>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
