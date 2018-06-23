@@ -9,8 +9,10 @@ const app = express()
 const port = process.env.PORT || 5000
 
 const twizo = require('./twizo')
-const twizoInstance = twizo.testTwizo
-// const twizoInstance = twizo.realTwizo
+let twizoInstance = twizo.testTwizo
+if (process.env.NODE_ENV === 'production') {
+  twizoInstance = twizo.realTwizo
+}
 
 // API calls
 app.get('/api/register', async (req, res, next) => {
