@@ -6,6 +6,9 @@
     "name": "Kaiyi Lee and Jeremy Hon",
     "email": "nil"
   },
+  "engines": {
+    "node": "8.11.2"
+  },
   "license": "MIT",
   "scripts": {
     "client": "cd client && yarn start",

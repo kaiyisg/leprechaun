@@ -67,6 +67,10 @@ app.get('/api/payroll', async (req, res, next) => {
   return res.send(data)
 })
 
+app.get('/api/version', async (req, res) => {
+  return res.send('v1.0')
+})
+
 const clockIn = () => {
   io.emit('clockin', {
     phoneNumber: NUMBER,
@@ -76,11 +80,11 @@ const clockIn = () => {
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
-  app.use(express.static(path.join(__dirname, 'client/build')))
+  app.use(express.static(path.join(__dirname, '../client/build')))
 
   // Handle React routing, return all requests to React app
   app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'))
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
   })
 }
 
