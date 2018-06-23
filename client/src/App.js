@@ -3,13 +3,13 @@ import React, { Component } from 'react'
 import './App.css'
 import ClockinTable from './table'
 import { subscribeToTimer } from './api/socket'
-import { Layout, Menu, Breadcrumb, Icon } from 'antd'
+import { Layout } from 'antd'
 
-const { Header, Content, Footer, Sider } = Layout
+const { Header, Content, Footer } = Layout
 
 class App extends Component {
   state = {
-    response: '',
+    payroll: [],
     timestamp: 'no timestamp yet',
     collapsed: false,
   }
@@ -20,13 +20,17 @@ class App extends Component {
         timestamp,
       }),
     )
-    // this.callApi()
-    //   .then(res => this.setState({ response: res.express }))
-    //   .catch(err => console.log(err));
+    this.callApi()
+      .then((res) => {
+        this.setState({ payroll: res })
+      })
+      .catch((err) => console.log(err))
   }
 
   callApi = async () => {
-    const response = await fetch('/api/hello')
+    console.log('calling api')
+    const response = await fetch('/api/payroll')
+    console.log('miao')
     const body = await response.json()
 
     if (response.status !== 200) throw Error(body.message)
@@ -47,7 +51,7 @@ class App extends Component {
                 padding: '24px',
               }}
             >
-              <span style={{ 'font-size': '24px' }}>Payroll</span>
+              <span style={{ fontSize: '24px' }}>Payroll</span>
             </Header>
             <Content
               style={{
@@ -61,7 +65,7 @@ class App extends Component {
               <p className="App-socket">
                 This is the timer value: {this.state.timestamp}
               </p>
-              <ClockinTable />
+              <ClockinTable data={this.state.payroll} />
             </Content>
             <Footer style={{ textAlign: 'center' }}>
               Leprechaun ©2018 Created by Leprechaun Pte. Ltd.

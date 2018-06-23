@@ -1,0 +1,42 @@
+const data = [
+  {
+    key: '1',
+    name: 'Jeremy Hon',
+    startTime: '',
+    endTime: '',
+    rate: '$13.50',
+    cost: '',
+    paid: '',
+  },
+  {
+    key: '2',
+    name: 'Janson Seah',
+    startTime: '',
+    endTime: '',
+    rate: '$13.50',
+    cost: '',
+    paid: '',
+  },
+  {
+    key: '3',
+    name: 'Huang Yixuan',
+    startTime: '',
+    endTime: '',
+    rate: '$13.50',
+    cost: '',
+    paid: '',
+  },
+  {
+    key: '4',
+    name: 'Lee Kai Yi',
+    startTime: '',
+    endTime: '',
+    rate: '$13.50',
+    cost: '',
+    paid: '',
+  },
+]
+
+module.exports = {
+  data,
+}

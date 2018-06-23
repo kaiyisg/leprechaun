@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const { startSocket } = require('./socket')
+const { data } = require('./data')
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -47,6 +48,11 @@ app.get('/api/verify', async (req, res, next) => {
     return next(err)
   }
   return res.send('verified!', messageId)
+})
+
+app.get('/api/payroll', async (req, res, next) => {
+  console.log('returning the payroll')
+  return res.send(data)
 })
 
 // app.get('/api/verify/check', async (req, res, next) => {

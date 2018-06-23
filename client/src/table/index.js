@@ -1,5 +1,6 @@
 import React from 'react'
 import { Table } from 'antd'
+import moment from 'moment'
 
 const columns = [
   {
@@ -28,44 +29,6 @@ const columns = [
     dataIndex: 'paid',
   },
 ]
-const data = [
-  {
-    key: '1',
-    name: 'Jeremy Hon',
-    startTime: '',
-    endTime: '',
-    rate: '$13.50',
-    cost: '',
-    paid: '',
-  },
-  {
-    key: '2',
-    name: 'Janson Seah',
-    startTime: '',
-    endTime: '',
-    rate: '$13.50',
-    cost: '',
-    paid: '',
-  },
-  {
-    key: '3',
-    name: 'Huang Yixuan',
-    startTime: '',
-    endTime: '',
-    rate: '$13.50',
-    cost: '',
-    paid: '',
-  },
-  {
-    key: '4',
-    name: 'Lee Kai Yi',
-    startTime: '',
-    endTime: '',
-    rate: '$13.50',
-    cost: '',
-    paid: '',
-  },
-]
 
 // rowSelection object indicates the need for row selection
 const rowSelection = {
@@ -78,7 +41,7 @@ const rowSelection = {
   },
 }
 
-const ClockinTable = () => (
+const ClockinTable = ({ data }) => (
   <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
 )
 
