@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
 import moment from 'moment'
+import web3 from 'web3'
 
 import './App.css'
 import ClockinTable from './table'
