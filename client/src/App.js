@@ -77,10 +77,19 @@ class App extends Component {
               style={{
                 background: '#fff',
                 display: 'flex',
-                padding: '24px',
+                padding: '10px',
+                height: 90,
               }}
             >
-              <span style={{ fontSize: '24px' }}>Payroll</span>
+              <img
+                style={{
+                  width: 200,
+                  height: 60,
+                  marginTop: 10,
+                  marginLeft: 10,
+                }}
+                src={require('./img/leprecoin.png')}
+              />
             </Header>
             <Content
               style={{
@@ -91,10 +100,17 @@ class App extends Component {
               }}
             >
               <ClockinTable data={this.state.payroll} />
+              <img
+                style={{
+                  position: 'absolute',
+                  right: '0',
+                  bottom: '-5px',
+                  width: 200,
+                }}
+                src={require('./img/lepre.png')}
+              />
             </Content>
-            <Footer style={{ textAlign: 'center' }}>
-              Leprechaun ©2018 Created by Leprechaun Pte. Ltd.
-            </Footer>
+            <Footer style={{ textAlign: 'right' }} />
           </Layout>
         </Layout>
       </div>
