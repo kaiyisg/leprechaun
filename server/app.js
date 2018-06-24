@@ -55,8 +55,8 @@ module.exports = (io, app) => {
       res.status(500)
       return res.send(err)
     }
+    clockIn()
     if (ok) {
-      clockIn()
       return res.send('verified!')
     }
     return res.send('failed!')
