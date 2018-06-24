@@ -1,18 +1,10 @@
-const io = require('socket.io')()
-const socketPort = 8000
+let io
 
-const startSocket = () => {
-  // io.on('connection', (client) => {
-  // client.on('clockinUpdates', (interval) => {
-  //   console.log('clocking in ', interval)
-  //   setInterval(() => {
-  //     client.emit('timer', new Date())
-  //   }, interval)
-  // })
-  // })
+const startSocket = (server) => {
+  const socket = require('socket.io')(server)
 
-  io.listen(socketPort)
-  console.log('socket listening on port ', socketPort)
+  console.log('socket listening on server')
+  return socket
 }
 
 module.exports = {
